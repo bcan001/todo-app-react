@@ -1,11 +1,24 @@
-import React from 'react'
+/* eslint-disable */
 
-const todoList = () => {
-    return (
-        <div>
-            <h1>todoList</h1>
-        </div>
-    )
-}
+import React from 'react';
+import PropTypes from 'prop-types'; //impt
+import ToDoListItem from './todoListItem';
 
-export default todoList
+const todoList = ({ todos, ...props }) => {
+  return (
+    <div>
+      {todos.map(todo => (
+        <ToDoListItem key={todo.id} todo={todo} {...props} />
+      ))}
+    </div>
+  );
+};
+
+todoList.propTypes = {
+  todos: PropTypes.array.isRequired, // ptar
+};
+
+export default todoList;
+
+
+

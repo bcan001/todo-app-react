@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -12,12 +14,8 @@ import './App.css';
 // console.log(xyz.b);
 // console.log(xyz.c);
 
-
 function App() {
-  return (
-    <div>hello!!!</div>
-  );
+  return <div>hello!!!</div>;
 }
 
 export default App;
-
