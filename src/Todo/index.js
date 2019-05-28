@@ -8,26 +8,21 @@ import TodoStatus from './todoStatus';
 export default class index extends Component {
   state = {
     todoText: '',
-    todos: [],
-    noticeText: ''
+    todos: []
   };
 
   onChange = event => {
     this.setState({ todoText: event.target.value }); //sst
   };
 
-  addTodo = () => {
-    const { todoText, todos, noticeText } = this.state; //cs
-    // console.log(todoText);
-    if (todoText != '') {
-        this.setState({
-        todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
-        todoText: '',
-        noticeText: ''
-        }); //sst
-    } else {
-        this.setState({ noticeText: 'Todo cannot be blank!' })
-    }
+  addTodo = (e) => {
+    e.preventDefault();
+    const { todoText, todos } = this.state; //cs
+    this.setState({
+    todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
+    todoText: '',
+    noticeText: ''
+    }); //sst
   };
 
   onDelete = todo => {
@@ -71,9 +66,6 @@ export default class index extends Component {
         <TodoForm value={todoText} onChange={this.onChange} addTodo={this.addTodo} />
         <div style={{ flex: 1, width: '100%' }}>
           <TodoList todos={todos} onDelete={this.onDelete} onComplete={this.onComplete} />
-        </div>
-        <div style={{ flex: 1}}>
-            <h4>{noticeText}</h4>
         </div>
         <div style={{ width: '100%', display: 'flex' }}>
           <TodoStatus />
