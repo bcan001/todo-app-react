@@ -1,39 +1,127 @@
-/* eslint-disable */
+// /* eslint-disable */
+
+// import React, { Component } from 'react';
+// import TodoForm from './todoForm';
+// import TodoList from './todoList';
+// import TodoStatus from './todoStatus';
+
+// export default class index extends Component {
+//   state = {
+//     todoText: '',
+//     todos: [],
+//     status: 'all',
+//   };
+
+//   onChange = event => {
+//     this.setState({ todoText: event.target.value }); //sst
+//   };
+
+//   addTodo = e => {
+//     e.preventDefault();
+//     const { todoText, todos } = this.state; //cs
+//     this.setState({
+//       todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
+//       todoText: '',
+//       noticeText: '',
+//     }); //sst
+//   };
+
+//   onDelete = todo => {
+//     const { todos } = this.state;
+//     this.setState({
+//       todos: todos.filter(x => x.id != todo.id),
+//     });
+//   };
+
+//   onComplete = todo => {
+//     const { todos } = this.state; //cs
+//     const i = todos.findIndex(x => x.id === todo.id);
+//     const updatedTodos = [
+//       ...todos.slice(0, i),
+//       { ...todo, isDone: !todo.isDone },
+//       ...todos.slice(i + 1),
+//     ];
+//     this.setState({ todos: updatedTodos });
+//   };
+
+//   onUpdate = todo => {
+//     const { todos } = this.state;
+//     const i = todos.findIndex(x => x.id === todo.id);
+//     const updatedTodos = [...todos.slice(0, i), todo, ...todos.slice(i + 1)];
+//     this.setState({ todos: updatedTodos });
+//   };
+
+//   render() {
+//     const { todoText, todos, noticeText } = this.state;
+//     console.log(todos);
+//     return (
+//       <div
+//         style={{
+//           height: '100vh',
+//           display: 'flex',
+//           flexDirection: 'column',
+//           alignItems: 'center',
+//         }}
+//       >
+//         <h1>Todo Form</h1>
+//         <TodoForm value={todoText} onChange={this.onChange} addTodo={this.addTodo} />
+//         <div style={{ flex: 1, width: '100%' }}>
+//           <TodoList
+//             todos={todos}
+//             onDelete={this.onDelete}
+//             onComplete={this.onComplete}
+//             onUpdate={this.onUpdate}
+//           />
+//         </div>
+//         <div style={{ width: '100%', display: 'flex' }}>
+//           <TodoStatus />
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+// // make blank todos not accepted
 
 import React, { Component } from 'react';
 import TodoForm from './todoForm';
 import TodoList from './todoList';
 import TodoStatus from './todoStatus';
 
-export default class index extends Component {
+class index extends Component {
+  static propTypes = {};
+
+  static defaultProps = {};
+
   state = {
     todoText: '',
-    todos: []
+    todos: [],
+    status: 'all',
   };
 
   onChange = event => {
-    this.setState({ todoText: event.target.value }); //sst
+    this.setState({ todoText: event.target.value });
   };
 
-  addTodo = (e) => {
+  addTodo = e => {
     e.preventDefault();
-    const { todoText, todos } = this.state; //cs
+    const { todoText, todos } = this.state;
     this.setState({
-    todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
-    todoText: '',
-    noticeText: ''
-    }); //sst
+      todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
+      todoText: '',
+      status: 'all',
+    });
   };
 
   onDelete = todo => {
     const { todos } = this.state;
     this.setState({
-      todos: todos.filter(x => x.id != todo.id),
+      todos: todos.filter(x => x.id !== todo.id),
     });
   };
 
   onComplete = todo => {
-    const { todos } = this.state; //cs
+    const { todos } = this.state;
     const i = todos.findIndex(x => x.id === todo.id);
     const updatedTodos = [
       ...todos.slice(0, i),
@@ -43,16 +131,23 @@ export default class index extends Component {
     this.setState({ todos: updatedTodos });
   };
 
-  //   onUpdate = todo => {
-  //     const { todos } = this.state; //cs
-  //     const i = todos.findIndex(x => x.id === todo.id);
-  //     const updatedTodos = [...todos.slice(0, i), { ...todo, isDone: !todo.isDone }, ...todos.slice(i + 1)];
-  //     this.setState({ todos: updatedTodos });
-  //   };
+  onUpdate = todo => {
+    const { todos } = this.state;
+    const i = todos.findIndex(x => x.id === todo.id);
+    const updatedTodos = [...todos.slice(0, i), todo, ...todos.slice(i + 1)];
+    this.setState({ todos: updatedTodos });
+  };
 
   render() {
-    const { todoText, todos, noticeText } = this.state;
-    console.log(todos);
+    const { todoText, todos, status } = this.state;
+    let filteredTodos = todos;
+    if (status === 'pending') {
+      filteredTodos = todos.filter(x => x.isDone === false);
+    }
+    if (status === 'completed') {
+      filteredTodos = todos.filter(x => x.isDone === true);
+    }
+
     return (
       <div
         style={{
@@ -62,17 +157,26 @@ export default class index extends Component {
           alignItems: 'center',
         }}
       >
-        <h1>Todo Form</h1>
+        <h2>Todo App</h2>
         <TodoForm value={todoText} onChange={this.onChange} addTodo={this.addTodo} />
         <div style={{ flex: 1, width: '100%' }}>
-          <TodoList todos={todos} onDelete={this.onDelete} onComplete={this.onComplete} />
+          <TodoList
+            todos={filteredTodos}
+            onDelete={this.onDelete}
+            onComplete={this.onComplete}
+            onUpdate={this.onUpdate}
+          />
         </div>
         <div style={{ width: '100%', display: 'flex' }}>
-          <TodoStatus />
+          <TodoStatus onStatusChange={sts => this.setState({ status: sts })} />
         </div>
       </div>
     );
   }
 }
 
-// make blank todos not accepted
+index.protoTypes = {};
+
+index.defaultProps = {};
+
+export default index;
