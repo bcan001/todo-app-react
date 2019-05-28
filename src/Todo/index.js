@@ -9,6 +9,7 @@ export default class index extends Component {
   state = {
     todoText: '',
     todos: [],
+    noticeText: ''
   };
 
   onChange = event => {
@@ -16,11 +17,17 @@ export default class index extends Component {
   };
 
   addTodo = () => {
-    const { todoText, todos } = this.state; //cs
-    this.setState({
-      todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
-      todoText: '',
-    }); //sst
+    const { todoText, todos, noticeText } = this.state; //cs
+    // console.log(todoText);
+    if (todoText != '') {
+        this.setState({
+        todos: [{ id: todos.length, text: todoText, isDone: false }, ...todos],
+        todoText: '',
+        noticeText: ''
+        }); //sst
+    } else {
+        this.setState({ noticeText: 'Todo cannot be blank!' })
+    }
   };
 
   onDelete = todo => {
@@ -49,7 +56,7 @@ export default class index extends Component {
   //   };
 
   render() {
-    const { todoText, todos } = this.state;
+    const { todoText, todos, noticeText } = this.state;
     console.log(todos);
     return (
       <div
@@ -65,6 +72,9 @@ export default class index extends Component {
         <div style={{ flex: 1, width: '100%' }}>
           <TodoList todos={todos} onDelete={this.onDelete} onComplete={this.onComplete} />
         </div>
+        <div style={{ flex: 1}}>
+            <h4>{noticeText}</h4>
+        </div>
         <div style={{ width: '100%', display: 'flex' }}>
           <TodoStatus />
         </div>
@@ -72,3 +82,5 @@ export default class index extends Component {
     );
   }
 }
+
+// make blank todos not accepted
